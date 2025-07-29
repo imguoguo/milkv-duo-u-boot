@@ -274,6 +274,26 @@ int board_init(void)
 	return 0;
 }
 
+#define CONFIG_SPL_LOAD_FIT_ADDRESS 0x91000000
+int board_late_init(void)
+{
+	char cmd[128];
+	// import env.txt
+	memset((void *)CONFIG_SPL_LOAD_FIT_ADDRESS, 0, CONFIG_ENV_SIZE);
+	sprintf(cmd, "load mmc 0:1 0x%x env.txt", CONFIG_SPL_LOAD_FIT_ADDRESS);
+	pr_debug("cmd:%s\n", cmd);
+	if (run_command(cmd, 0))
+		return 0;
+	memset(cmd, '\0', 128);
+	sprintf(cmd, "env import -t 0x%x", CONFIG_SPL_LOAD_FIT_ADDRESS);
+	pr_debug("cmd:%s\n", cmd);
+	if (!run_command(cmd, 0)){
+		pr_info("load env.txt from bootfs successful\n");
+	}
+
+	return 0;
+}
+
 #if defined(__aarch64__)
 int dram_init(void)
 {
