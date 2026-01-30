@@ -24,8 +24,11 @@ ifeq ($(CONFIG_CMODEL_MEDANY),y)
 	CMODEL = medany
 endif
 
-ARCH_FLAGS = -march=$(ARCH_BASE)$(ARCH_A)$(ARCH_C) -mabi=$(ABI) \
-	     -mcmodel=$(CMODEL)
+ARCH_MARCH := $(ARCH_BASE)$(ARCH_A)$(ARCH_C)
+ARCH_MARCH := $(call cc-option,-march=$(ARCH_MARCH)_zicsr_zifencei -mabi=$(ABI),\
+               $(call cc-option,-march=$(ARCH_MARCH)_zicsr -mabi=$(ABI),\
+               -march=$(ARCH_MARCH) -mabi=$(ABI)))
+ARCH_FLAGS = $(ARCH_MARCH) -mcmodel=$(CMODEL)
 
 PLATFORM_CPPFLAGS	+= $(ARCH_FLAGS)
 CFLAGS_EFI		+= $(ARCH_FLAGS)

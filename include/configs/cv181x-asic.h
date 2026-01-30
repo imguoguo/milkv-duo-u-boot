@@ -8,6 +8,7 @@
 #ifndef __CV181X_ASIC_H__
 #define __CV181X_ASIC_H__
 
+#include <linux/kconfig.h>
 #include <../../../board/cvitek/cv181x/cv181x_reg.h>
 
 /* defined in cvipart.h */
